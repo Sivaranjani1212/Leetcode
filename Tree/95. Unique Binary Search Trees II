@@ -1,0 +1,94 @@
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        return n > 0 ? generate_trees(1, n) : new ArrayList<>();
+    }
+
+    private List<TreeNode> generate_trees(int start, int end) {
+        List<TreeNode> all_trees = new ArrayList<>();
+        if(start>end){
+            all_trees.add(null);
+            return all_trees;
+        }
+        for(int i= start;i<=end;i++){
+           List<TreeNode> left=generate_trees(start,i-1);
+           List<TreeNode> right=generate_trees(i+1,end);
+           for(TreeNode l : left){
+               for(TreeNode r : right){
+                   TreeNode root=new TreeNode(i);
+                   root.left=l;
+                   root.right=r;
+                   all_trees.add(root);
+               }
+           }
+        }
+        return all_trees;
+    }
+}
+
+
+
+
+//dp rec
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        List<TreeNode>[][] dp = new List[n + 1][n + 1];
+        return f(1, n, dp);
+    }
+    private List<TreeNode> f(int low, int high, List<TreeNode>[][] dp){
+        List<TreeNode> bst = new ArrayList<>();
+        if (low > high){
+            bst.add(null);
+            return bst;
+        }
+        if (dp[low][high] != null)
+            return dp[low][high];
+
+        for (int i = low; i <= high; i++){
+            List<TreeNode> leftSubTree = f(low, i - 1, dp);
+            List<TreeNode> rightSubTree = f(i + 1, high, dp);
+            for (TreeNode left : leftSubTree){
+                for (TreeNode right : rightSubTree){
+                    bst.add(new TreeNode(i, left, right));
+                }
+            }
+        }
+        return dp[low][high] = bst;
+    }
+}
+
+
+
+
+// dp tabulation
+class Solution {
+    public List<TreeNode> generateTrees(int n) {
+        if (n == 0) return new ArrayList<>();
+
+        List<TreeNode>[] dp = new ArrayList[n + 1];
+        dp[0] = new ArrayList<>();
+        dp[0].add(null);
+        for (int nodes = 1; nodes <= n; nodes++) {
+            dp[nodes] = new ArrayList<>();
+            for (int root = 1; root <= nodes; root++) {
+                for (TreeNode left_tree : dp[root - 1]) {
+                    for (TreeNode right_tree : dp[nodes - root]) {
+                        TreeNode root_node = new TreeNode(root);
+                        root_node.left = left_tree;
+                        root_node.right = clone(right_tree, root);
+                        dp[nodes].add(root_node);
+                    }
+                }
+            }
+        }
+        return dp[n];
+    }
+
+    private TreeNode clone(TreeNode n, int offset) {
+        if (n == null) return null;
+        TreeNode node = new TreeNode(n.val + offset);
+        node.left = clone(n.left, offset);
+        node.right = clone(n.right, offset);
+        return node;
+    }
+}
+*/
