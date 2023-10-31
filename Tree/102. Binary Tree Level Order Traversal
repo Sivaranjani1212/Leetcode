@@ -1,0 +1,50 @@
+----> Recursive in Preorder Traversal
+---->keep track of lvl number
+
+class Solution {
+    List<List<Integer>> res = new LinkedList<List<Integer>>();
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        helper(root,0);
+        return res;
+    }
+    public void helper(TreeNode root, int lvl){
+        if(root== null){
+            return;
+        }
+        if(res.size()==lvl){
+            List<Integer> sub=new LinkedList<Integer>();
+            sub.add(root.val);
+            res.add(sub);
+
+        }else{
+            res.get(lvl).add(root.val);
+        }
+        helper(root.left,lvl+1);
+        helper(root.right,lvl+1);
+    }
+}
+
+
+
+
+---->Iterative
+
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> res = new LinkedList<List<Integer>>();
+        if(root==null) return res;
+        queue.add(root);
+        while(!queue.isEmpty()){
+            List<Integer> list = new LinkedList<>();
+            int num = queue.size();
+            for(int i=0; i<num; i++){
+                if(queue.peek().left!=null) queue.add(queue.peek().left);
+                if(queue.peek().right!=null) queue.add(queue.peek().right);
+                list.add(queue.remove().val);
+            }
+            res.add(list);
+        }
+        return ;
+    }
+}
