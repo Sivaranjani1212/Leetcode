@@ -1,0 +1,54 @@
+//dfs
+
+class Solution {
+    public Node connect(Node root) {
+        if(root==null) return root;
+        if(root.left!=null && root.right!=null) root.left.next = root.right;
+        if(root.left!=null && root.right==null && root.next!=null){
+            root.left.next = helper(root.next);    
+        }  
+        if(root.right!=null && root.next!=null) root.right.next = helper(root.next);      
+        connect(root.right);
+        connect(root.left);
+        return root;
+    }
+  //go horizontally and return first chil with not null value 
+    public Node helper(Node root){
+        if(root==null) return root;
+        if(root.left!=null) return root.left;
+        if(root.right!=null) return root.right;
+        return helper(root.next);
+        }
+ }
+-------------------------------------------------------------------------------------------------------------------
+//bfs
+
+class Solution {
+    public Node connect(Node root) {
+        if(root==null)
+        return null;
+
+        Queue<Node> q = new LinkedList<>();
+
+        q.add(root);
+
+        while(!q.isEmpty())
+        {
+            int size = q.size();
+            for(int i=0;i<size;i++)
+            {
+                Node node = q.remove();
+
+                if(i<size-1)
+                node.next=q.peek();
+
+                if(node.left!=null)
+                q.add(node.left);
+
+                if(node.right!=null)
+                q.add(node.right);
+            }
+        }
+        return root;
+    }
+}*/
