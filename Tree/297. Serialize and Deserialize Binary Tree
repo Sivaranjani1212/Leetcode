@@ -1,0 +1,81 @@
+//dfs preorder
+
+public class Codec {
+    public String serialize(TreeNode root) {
+        if (root == null) return "#";
+        return root.val + "," + serialize(root.left) + "," + serialize(root.right);
+    }
+
+    public TreeNode deserialize(String data) {
+        Queue<String> queue = new LinkedList<>(Arrays.asList(data.split(",")));
+        return helper(queue);
+    }
+    
+    private TreeNode helper(Queue<String> queue) {
+        String s = queue.poll();
+        if (s.equals("#")) return null;
+        TreeNode root = new TreeNode(Integer.valueOf(s));
+        root.left = helper(queue);
+        root.right = helper(queue);
+        return root;
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+//bfs using stack in preorder
+
+public class Codec {
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        stack.push(root);
+        while(!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            if(node == null) {
+                sb.append("#").append(",");
+            } else {
+                sb.append(node.val).append(",");
+                stack.push(node.right);
+                stack.push(node.left);
+            }
+        }
+        return sb.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] x = data.split(",");
+        if("#".equals(x[0])) {
+            return null;    
+        }
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        TreeNode root = toNode(x[0]);
+        TreeNode cur = null;
+        stack.push(root);
+        int i = 1;
+        while(!stack.isEmpty()) {
+            cur = stack.peek();
+            while(cur != null && cur.left == null) {
+                cur.left = toNode(x[i++]);
+                cur = cur.left;
+                if(cur != null)
+                    stack.push(cur);
+            }
+            cur = stack.pop();
+            cur.right = toNode(x[i++]);
+            if(cur.right != null) {
+                stack.push(cur.right);
+            }
+            cur = cur.right;
+        }
+        return root;
+    }
+    
+    TreeNode toNode(String s) {
+        if("#".equals(s)) {
+            return null;
+        }
+        return new TreeNode(Integer.parseInt(s));
+    }
+}
