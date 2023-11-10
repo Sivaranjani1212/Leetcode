@@ -1,0 +1,95 @@
+*class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        return helper(root);
+    }
+    int helper(TreeNode root){
+        if(root==null) return 0;
+        int s=0;
+        if(root.left!=null && root.left.left==null && root.left.right==null){
+            s+=root.left.val;
+        }
+      s+=  helper(root.left);
+      s+=helper(root.right);
+        return s;
+    }
+}
+*/
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        if(root.left != null && root.left.left == null && root.left.right == null){
+            return root.left.val + sumOfLeftLeaves(root.right);
+        }
+        return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+    }
+}
+/*
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+		
+		// In this solution we will also save if the node is a left node or not.
+        Deque<Pair<TreeNode, Boolean>> stack = new ArrayDeque<>();
+        stack.push(new Pair<>(root, false));
+
+        int result = 0;
+
+        while (!stack.isEmpty()) {
+            Pair<TreeNode, Boolean> cur = stack.pop();
+            TreeNode node = cur.getKey();
+            boolean isLeft = cur.getValue();
+
+            if (isLeft && node.left == null && node.right == null) {
+                result += node.val;
+                continue;
+            }
+
+            if (node.right != null) {
+                stack.push(new Pair<>(node.right, false));
+            }
+            if (node.left != null) {
+                stack.push(new Pair<>(node.left, true));
+            }
+        }
+
+        return result;
+    }
+}*/
+/*
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+		// In this solution we will also save if the node is a left node or not.
+        Queue<Pair<TreeNode, Boolean>> queue = new LinkedList<>();
+        queue.offer(new Pair<>(root, false));
+
+        int result = 0;
+
+        while (!queue.isEmpty()) {
+            Pair<TreeNode, Boolean> cur = queue.poll();
+            TreeNode node = cur.getKey();
+            boolean isLeft = cur.getValue();
+
+            if (isLeft && node.left == null && node.right == null) {
+                result += node.val;
+                continue;
+            }
+
+            if (node.left != null) {
+                queue.offer(new Pair<>(node.left, true));
+            }
+            if (node.right != null) {
+                queue.offer(new Pair<>(node.right, false));
+            }
+        }
+
+        return result;
+    }
+}*/
