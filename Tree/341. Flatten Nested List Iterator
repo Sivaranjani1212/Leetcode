@@ -1,0 +1,63 @@
+public class NestedIterator {
+    private List<Integer> flattened;
+    private int index;
+
+    public NestedIterator(List<NestedInteger> nestedList) {
+        flattened = new ArrayList<>();
+        index = 0;
+        flattened = flatten(nestedList);
+    }
+
+    private List<Integer> flatten(List<NestedInteger> nested) {
+        List<Integer> result = new ArrayList<>();
+        for (NestedInteger ni : nested) {
+            if (ni.isInteger()) {
+                result.add(ni.getInteger());
+            } else {
+                result.addAll(flatten(ni.getList()));
+            }
+        }
+        return result;
+    }
+
+    public int next() {
+        return flattened.get(index++);
+    }
+
+    public boolean hasNext() {
+        return index < flattened.size();
+    }
+}
+----------------------------------------------------------------------------------------------------------------
+//with stack
+
+public class NestedIterator implements Iterator<Integer> {
+    Deque<NestedInteger> stack = new ArrayDeque<>();
+
+    public NestedIterator(List<NestedInteger> nestedList) {
+        prepareStack(nestedList);
+    }
+
+    @Override
+    public Integer next() {
+        if (!hasNext()) { //next being a list is handled here
+            return null; 
+        }
+        return stack.pop().getInteger(); 
+    }
+
+    @Override
+    public boolean hasNext() {
+        while (!stack.isEmpty() && !stack.peek().isInteger()) {
+            List<NestedInteger> list = stack.pop().getList();
+            prepareStack(list);
+        }
+        return !stack.isEmpty(); 
+    }
+
+    private void prepareStack(List<NestedInteger> nestedList) {
+        for (int i = nestedList.size() - 1; i >= 0; i--) {
+            stack.push(nestedList.get(i));
+        }
+    }
+}
