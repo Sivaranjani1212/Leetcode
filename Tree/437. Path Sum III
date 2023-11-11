@@ -1,0 +1,44 @@
+//dfs
+
+class Solution {
+    int ctr =0;
+    public int pathSum(TreeNode root, int sum) {
+        if(root == null)
+            return 0;
+        PSH(root,sum,0);
+        pathSum(root.left,sum);
+        pathSum(root.right,sum);
+
+        return ctr;
+    }
+
+    void PSH(TreeNode rt , int s , long currS)
+    {
+        if(rt==null)
+            return;
+        currS += rt.val;
+        if(currS == s)
+            ctr++;
+        PSH(rt.left,s,currS);
+        PSH(rt.right,s,currS); 
+    }
+}
+---------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public int pathSum(TreeNode root, int targetSum) {
+        if(root == null)
+            return 0;
+        
+        return pathSum(root.left, targetSum) + pathSum(root.right, targetSum) + helper(root, 0, targetSum);
+    }
+    
+    int helper(TreeNode root, int current, int target) {
+        if(root == null)
+            return 0;
+        
+        current += root.val;
+        
+        return (current == target ? 1 : 0) + helper(root.left, current, target) + helper(root.right, current, target);
+    }
+}
