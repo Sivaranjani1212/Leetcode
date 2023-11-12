@@ -1,0 +1,23 @@
+//dfs postorder
+//check for ans but return whats needed for next recursion
+
+class Solution {
+    static int ans;
+    public int findTilt(TreeNode root) {
+        ans=0;
+        task(root);
+        return ans;
+    }
+
+    static int task(TreeNode root){
+        if(root == null) return 0;
+
+        int leftSum = task(root.left);
+
+        int rightSum = task(root.right);
+
+        ans += Math.abs(leftSum - rightSum);
+
+        return root.val + leftSum + rightSum;
+    }
+}
