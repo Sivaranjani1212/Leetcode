@@ -1,0 +1,107 @@
+//dfs
+
+class Solution {
+    Map<Integer, Integer> levelMin = new HashMap<>();
+
+    public int widthOfBinaryTree(TreeNode root) {
+        return dfs(root, 1, 1);
+    }
+
+    private int dfs(TreeNode node, int depth, int index) {
+        if (node == null) {
+            return 0;
+        }
+        levelMin.putIfAbsent(depth, index);
+        return Math.max(index - levelMin.get(depth) + 1, Math.max(dfs(node.left, depth + 1, index * 2), dfs(node.right, depth + 1, index * 2 + 1)));
+    }
+}
+------------------------------------------------------------------------------------------------------------------
+//bfs 
+
+class Solution {
+    public int widthOfBinaryTree(TreeNode root) {
+        if(root == null)
+            return 0;
+        
+        int width = 1;
+        Queue<TreeNode> qu = new LinkedList<>();
+        Queue<Integer> idxqu = new LinkedList<>();
+
+        qu.offer(root);
+        idxqu.offer(1);
+
+        while(!qu.isEmpty())
+        {
+            int level = qu.size();
+            int leftIdx = 0, rightIdx = 0;
+
+            for(int i = 0; i < level; i++)
+            {
+                TreeNode temp = qu.poll();
+                int idx = idxqu.poll();
+
+                if(i == 0)
+                    leftIdx = idx;
+                if(i == level - 1)
+                    rightIdx = idx;
+                
+                if(temp.left != null)
+                {
+                    qu.offer(temp.left);
+                    idxqu.offer(idx * 2);
+                }
+                if(temp.right != null)
+                {
+                    qu.offer(temp.right);
+                    idxqu.offer(idx * 2 + 1);
+                }
+            }
+            width = Math.max(width, rightIdx - leftIdx + 1);
+        }
+        return width;
+    }
+}
+-------------------------------------------------------------------------------------------------------------
+//bfs with pair
+
+class Solution {
+    public int widthOfBinaryTree(TreeNode root) {
+        LinkedList<pair> q = new LinkedList<>();
+
+        int max = Integer.MIN_VALUE;
+
+        if(root==null) return 0;
+
+        q.addLast(new pair(root,0));
+
+        while(!q.isEmpty())
+        {
+            int size = q.size();
+            max = Math.max(max, (q.getLast().level - q.getFirst().level +1));
+
+            for(int i=0;i<size;i++)
+            {
+                pair element = q.removeFirst();
+
+                if(element.root.left!=null)
+                q.addLast(new pair(element.root.left,2*element.level));
+
+                if(element.root.right!=null)
+                q.addLast(new pair(element.root.right,2*element.level+1));
+            }
+        }
+return max;
+
+    }
+
+
+static class pair {
+    int level;
+    TreeNode root;
+    public pair(TreeNode root, int level)
+    {
+        this.level=level;
+        this.root=root;
+    }
+}
+}*/
