@@ -1,0 +1,52 @@
+
+class Solution {
+
+    static HashMap<Integer,Integer> hm = new HashMap<>() ;
+    static int tdpth ;
+    static List<Integer> ans = new ArrayList<>() ;
+
+    
+    public List<Integer> distanceK(TreeNode root, TreeNode t, int k) {
+        hm.clear() ;
+        ans.clear() ;
+        func1(root,t.val,k,0) ;
+        func2(root,0,k) ;
+        return ans ;
+    }
+    static boolean func1(TreeNode node,int t,int k,int dpth) {
+        if(node!=null) {
+            if(node.val==t) {
+                hm.put(t,0) ;
+                tdpth = dpth;
+                return true;
+            }
+            boolean r1 = func1(node.left,t,k,dpth+1) ;
+            boolean r2 = func1(node.right,t,k,dpth+1);
+            if(r1 || r2) {
+                hm.put(node.val,tdpth-dpth) ;
+                return true;
+            } 
+        }
+        return false;
+    }
+
+    static void func2(TreeNode node,int dist,int k) {
+        if(node!=null) {
+            if(hm.containsKey(node.val)) {
+                if(hm.get(node.val)==k) {
+                    ans.add(node.val) ;
+                }
+                func2(node.left,hm.get(node.val)+1,k) ;
+                func2(node.right,hm.get(node.val)+1,k) ;
+            }
+            else {
+                if(dist==k) {
+                    ans.add(node.val) ;
+                }
+                func2(node.left,dist+1,k);
+                func2(node.right,dist+1,k) ;
+            }
+        }
+    }
+
+}
