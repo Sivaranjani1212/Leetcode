@@ -1,0 +1,82 @@
+//bfs have 2 queue-> one for iteration -> one for incomplete
+class CBTInserter {
+    private TreeNode root;
+    private Queue<TreeNode> treeQueue;
+    public CBTInserter(TreeNode root) {
+        Queue<TreeNode> bfsQueue = new LinkedList<>();
+        this.root = root;
+        treeQueue = new LinkedList<>();
+
+        bfsQueue.offer(root);
+        while (!bfsQueue.isEmpty()) {
+            int size = bfsQueue.size();
+            while (size-- > 0) {
+                TreeNode node = bfsQueue.poll();
+                if (node.left == null || node.right == null) {
+                    treeQueue.offer(node);
+                }
+                if (node.left != null) {
+                    bfsQueue.offer(node.left);
+                }
+                if (node.right != null) {
+                    bfsQueue.offer(node.right);
+                }
+            }
+        }
+    }
+    
+    public int insert(int val) {
+        TreeNode node = treeQueue.peek();
+        TreeNode newNode = new TreeNode(val);
+        treeQueue.offer(newNode);
+
+        if (node.left == null) {
+            node.left = newNode;
+        } else {
+            node.right = newNode;
+            treeQueue.poll();
+        }
+
+        return node.val;
+    }
+    
+    public TreeNode get_root() {
+        return root;
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------------
+//bfs -> only one queue
+
+class CBTInserter {
+	private Queue<TreeNode> queue;
+	private TreeNode root;
+
+	public CBTInserter(TreeNode root) {
+		this.root = root;
+		this.queue = new LinkedList<>();
+		this.queue.offer(this.root);
+		while (this.queue.peek().left != null && this.queue.peek().right != null) {
+			TreeNode treeNode = this.queue.poll();
+			this.queue.offer(treeNode.left);
+			this.queue.offer(treeNode.right);
+		}
+		if (this.queue.peek().left != null) {
+			this.queue.offer(this.queue.peek().left);
+		}
+	}
+	public int insert(int val) {
+		TreeNode treeNode = this.queue.peek();
+		if (treeNode.left == null) {
+			treeNode.left = new TreeNode(val);
+			this.queue.offer(treeNode.left);
+		} else {
+			treeNode.right = new TreeNode(val);
+			this.queue.poll();
+			this.queue.offer(treeNode.right);
+		}
+		return treeNode.val;
+	}
+	public TreeNode get_root() {
+		return this.root;
+	}
+}
