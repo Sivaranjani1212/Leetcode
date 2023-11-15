@@ -1,0 +1,51 @@
+//dfs
+
+class Solution {
+    int ans;
+    public int distributeCoins(TreeNode root) {
+        ans = 0;
+        dfs(root);
+        return ans;
+    }
+    public int dfs(TreeNode root){
+        if (root == null) return 0;
+        int coin = dfs(root.left) + dfs(root.right) + root.val - 1;
+        ans += Math.abs(coin);
+        return coin;
+    }
+}
+------------------------------------------------------------------------------------------------------------------
+
+class Solution
+{
+    int moves= 0;
+    public int distributeCoins(TreeNode root)
+    {
+        helper(root);
+        return moves;
+    }
+    public int helper(TreeNode root)
+    {
+        if(root == null)
+           return 0;
+
+        int coinsLeft= helper(root.left);
+	    int coinsRight= helper(root.right);/
+       
+        int coins= coinsLeft + coinsRight;
+        
+        
+        if(root.val == 0) //root node cannot contribute, but needs coin from its parent 
+          coins-= 1;//current node need one coin from parent
+      
+        else if(root.val == 1)//root node cannot contribute, at par
+          coins+= 0;
+      
+        else //root node can contribute to its parent
+          coins+= root.val- 1;//excess coin are been transfered to the parent 
+    
+        moves+= Math.abs(coins);
+      
+        return coins;
+    }
+}
