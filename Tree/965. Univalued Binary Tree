@@ -1,0 +1,12 @@
+
+class Solution {
+    public boolean isUnivalTree(TreeNode root) {
+        int num=root.val;
+        return helper(root,num);
+    }
+    public boolean helper(TreeNode root ,int num){
+        if(root== null) return true;
+        if(root.val!=num) return false;
+        return helper(root.left,num) && helper(root.right,num);
+    }
+}
