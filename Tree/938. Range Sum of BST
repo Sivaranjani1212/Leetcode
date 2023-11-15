@@ -1,0 +1,30 @@
+//dfs using bst
+
+class Solution {
+    int ans=0;
+        public int rangeSumBST(TreeNode root, int L, int R) {
+            if(root == null) return -1;
+            if(root.val >=L && root.val<=R) ans+= root.val;
+            if(root.val>L) rangeSumBST(root.left, L, R);
+            if(root.val<R) rangeSumBST(root.right, L, R);
+            return ans;
+        }
+}
+-------------------------------------------------------------------------------------------------------------------
+//dfs normal
+
+class Solution {
+    int sum=0;
+    public int rangeSumBST(TreeNode root, int low, int high) {
+        helper(root,low,high);
+        return sum;
+    }
+    public void helper(TreeNode root, int low, int high){
+        if(root==null) return;
+        if(root.val>=low && root.val<=high){
+            sum+=root.val;
+        }
+        helper(root.left,low,high);
+        helper(root.right,low,high);
+    }
+}
