@@ -1,0 +1,51 @@
+//dfs
+
+class Solution {
+    boolean check = false;
+    public boolean isCompleteTree(TreeNode root) {
+        int h = height(root);
+        return helper(root, h, 1);
+    }
+    
+    public boolean helper(TreeNode root, int h, int depth){
+        if(root == null){
+            //if null found before leaf
+            if(depth < h) return false;
+            if(depth > h) return true;
+            // if null at height and end the check
+            if(depth == h && !check) check = true;
+            return true;
+        }
+        else if(depth == h && check) return false;
+        return helper(root.left, h, depth + 1) && helper(root.right, h, depth + 1);
+        
+    }
+    
+    public int height(TreeNode root){
+        if(root == null) return 0;
+        else return 1 + Math.max(height(root.left), height(root.right));
+    }
+}
+----------------------------------------------------------------------------------------------------------------------
+//bfs
+
+class Solution {
+    public boolean isCompleteTree(TreeNode root) {
+        boolean end = false;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while(!queue.isEmpty()) {
+            TreeNode currentNode = queue.poll();
+            if(currentNode == null) {
+                end = true;
+            } else {
+                if(end) {
+                    return false;
+                }
+                queue.offer(currentNode.left);
+                queue.offer(currentNode.right);
+            }
+        }
+        return true;
+    }
+}
