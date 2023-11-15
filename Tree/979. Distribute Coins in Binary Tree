@@ -1,4 +1,4 @@
-//dfs
+//dfs -> postorder
 
 class Solution {
     int ans;
