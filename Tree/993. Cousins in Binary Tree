@@ -1,0 +1,71 @@
+//dfs
+
+class Solution {
+    int depthX, parentX;
+
+    public boolean isCousins(TreeNode root, int x, int y) {
+        depthX = parentX = -1;
+        return Boolean.TRUE.equals(traversal(root, x, y, 1, -1));
+    }
+
+    private Boolean traversal(TreeNode root, int x, int y, int depth, int parent) {
+        if (root == null) {
+            return null;
+        }
+        if (root.val == x) {
+            if (depthX < 0) {
+                depthX = depth;
+                parentX = parent;
+            } else {
+                return depth == depthX && parentX != parent;
+            }
+        } else if (root.val == y) {
+            if (depthX < 0) {
+                depthX = depth;
+                parentX = parent;
+            } else {
+                return depth == depthX && parentX != parent;
+            }
+        }
+        Boolean status = traversal(root.left, x, y, depth + 1, root.val);
+        if (status != null) {
+            return status;
+        }
+        return traversal(root.right, x, y, depth + 1, root.val);
+    }
+}
+------------------------------------------------------------------------------------------------------------------------
+
+class Solution {
+    public int getDepth(TreeNode root, int search){
+        if(root == null)
+            return -(int)1e9;
+        if(search == root.val)
+            return 0;
+        
+        return 1 + Math.max(getDepth(root.left, search), getDepth(root.right, search));
+    }
+
+    public TreeNode getParent(TreeNode root, TreeNode parent, int search){
+        if(root == null)
+            return null;
+        if(search == root.val)
+            return parent;
+        
+        TreeNode left = getParent(root.left, root, search);
+        TreeNode right = getParent(root.right, root, search);
+        if(left == null && right == null)
+            return null;
+        else if(left == null)
+            return right;
+        return left;
+    }
+
+    public boolean isCousins(TreeNode root, int x, int y){
+        int xDepth = getDepth(root, x);
+        int yDepth = getDepth(root, y);
+        if(xDepth != yDepth)
+            return false;
+        return getParent(root, null, x) != getParent(root, null, y);
+    }
+}
