@@ -1,0 +1,26 @@
+class Solution {
+    public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+       return helper(cloned,target);
+    }
+    public TreeNode helper(TreeNode root, TreeNode target){
+          if(root== null) return null;
+          if(root.val==target.val) return root;
+          TreeNode left=helper(root.left,target);
+          TreeNode right =helper(root.right,target);
+          if(left!= null) return left;
+          return right;
+    }
+
+}
+-----------------------------------------------------------------------------------------------------------------
+//dfs
+
+class Solution {
+    public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
+        if(original==null){ return null;}
+        if(original.val==target.val){ return cloned;}
+        TreeNode ans = getTargetCopy(original.left, cloned.left,target);
+        if(ans!=null){ return ans;}
+        return getTargetCopy(original.right, cloned.right, target);
+    }
+}
