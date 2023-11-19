@@ -1,0 +1,16 @@
+class Solution {
+    int ans=0;
+    public int goodNodes(TreeNode root) {
+        helper(root,root.val);
+        return ans;
+    }
+    public void helper(TreeNode root, int maxx){
+        if(root==null) return;
+        if(root.val>=maxx){
+            ans++;
+            maxx=root.val;
+        }
+        helper(root.left,maxx);
+        helper(root.right,maxx);
+    }
+}
