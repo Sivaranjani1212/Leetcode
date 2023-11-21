@@ -1,0 +1,55 @@
+//dfs
+
+class Solution {
+    public void dfs(TreeNode curr, String path, int count){
+        if(curr == null){
+            return;
+        }
+        if(count > max){
+            max = count;
+        }
+
+        if(path == "right" || path == ""){
+            dfs(curr.left, "left", count+1);
+        }else{
+            dfs(curr.left, "left", 1);
+        }
+        if(path == "left" || path == ""){
+            dfs(curr.right, "right", count + 1);
+        }else{
+            dfs(curr.right, "right", 1);
+        }
+        
+    }
+
+    int max = 0;
+    public int longestZigZag(TreeNode root) {
+        String path = "";
+        dfs(root, path, 0);
+
+        return max;
+    }
+}
+--------------------------------------------------------------------------------------------------------
+//dfs
+
+class Solution {
+    
+    public int maxi = 0;
+    public void helper(TreeNode root,int LorR, int len){
+        if(root == null) return; 
+        maxi = Math.max(len,maxi); 
+        if(LorR == 0){ 
+            helper(root.right,1,len+1); 
+            helper(root.left,0,1); 
+        } else{ 
+            helper(root.left,0,len+1);
+            helper(root.right,1,1);
+        }
+    }
+    public int longestZigZag(TreeNode root) {
+        helper(root.left,0,1); 
+        helper(root.right,1,1); 
+        return maxi;
+    }
+}
