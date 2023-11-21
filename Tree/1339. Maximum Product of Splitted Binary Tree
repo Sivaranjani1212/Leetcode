@@ -1,0 +1,50 @@
+//wont work becoz of edge case look for test case 2
+/*
+class Solution {
+    int maxx=0;
+    public int maxProduct(TreeNode root) {
+        helper(root);
+        return (int)(maxx % 1000000007);
+    }
+    public int helper(TreeNode root){
+        if(root== null) return 0;
+        if(root.left== null && root.right== null) return root.val;
+        int left = helper(root.left);
+        int right=helper(root.right);
+        if(left*(right+root.val)>maxx){
+            maxx=left*(right+root.val);
+        }else if(right*(left+root.val)>maxx){
+            maxx=right*(left+root.val);
+        }
+        return left+right+root.val;
+    }
+}
+*/
+class Solution {
+    long maxProduct = Integer.MIN_VALUE;
+    public int maxProduct(TreeNode root) {
+        long totalSum = sumOfAllNodes(root);
+        subTreeSum(root,totalSum);
+        return (int)(maxProduct % 1000000007);
+    }
+    private long subTreeSum(TreeNode root, long totalSum){
+        // base case
+        if(root == null){
+            return 0;
+        }
+        long leftSum = subTreeSum(root.left,totalSum);
+        long rightSum = subTreeSum(root.right,totalSum);
+
+        long currentSubTreeSum = leftSum + rightSum + root.val; 
+        long currentProduct = (currentSubTreeSum) * (totalSum - currentSubTreeSum);
+        maxProduct = Math.max(maxProduct, currentProduct);
+        return currentSubTreeSum;
+    }
+    private long sumOfAllNodes(TreeNode root){
+        // base case
+        if(root == null){
+            return 0;
+        }
+        return root.val + sumOfAllNodes(root.left) + sumOfAllNodes(root.right);
+    }
+}
