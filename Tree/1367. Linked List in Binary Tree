@@ -1,0 +1,44 @@
+class Solution {
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        if(root == null)    return false;
+        if(issame(head, root))  return true;
+        return isSubPath(head, root.left) || isSubPath(head, root.right);
+    }
+    private boolean issame(ListNode head, TreeNode root) {
+        if(head == null)    return true;
+        if(root == null)    return false;
+        if(head.val != root.val)    return false;
+        return issame(head.next, root.left) || issame(head.next, root.right);
+    }
+}
+
+--------------------------------------------------------------------------------------------------------
+//doesnt work
+class Solution {
+    
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        
+        return helper(head,root);
+    }
+    public boolean helper(ListNode head, TreeNode root){
+        if(root== null ) return false;
+           if(root.val==head.val) check(head,root);
+          boolean l= helper(head,root.left);
+          if(l==true) return true;
+          boolean r= helper(head,root.right);
+          if(r== true) return true;
+          return false;
+    }
+    public boolean check(ListNode head, TreeNode root){
+       if(head== null) return true;
+       if(root== null) return false;
+       if(root.left!=null && head.next!=null &&  root.left.val==head.next.val){
+           return check(head.next,root.left);
+       }
+       if(root.right!=null && head.next!=null && root.right.val == head.next.val){
+           return check(head.next, root.right);
+       }
+       return false;
+
+    }
+}
