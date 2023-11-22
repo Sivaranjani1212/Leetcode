@@ -1,0 +1,127 @@
+//stack
+
+class ThroneInheritance {
+    HashMap<String,ArrayList<String>> h;
+    String king="";
+    HashSet<String> hset=new HashSet<String>();
+    public ThroneInheritance(String kingName) {
+        h=new HashMap<String,ArrayList<String>>();
+        king=kingName;
+    }
+    
+    public void birth(String parentName, String childName) {
+        if(!h.containsKey(parentName))
+        {
+            ArrayList<String> l=new ArrayList<String>();
+            l.add(childName);
+            h.put(parentName,l);
+        }
+        else
+        {
+             ArrayList<String> l=h.get(parentName);
+            l.add(childName);
+            h.put(parentName,l);
+        }
+    }
+    
+    public void death(String name) {
+        hset.add(name);
+    }
+    
+    public List<String> getInheritanceOrder() {
+        ArrayList<String> result=new ArrayList<String>();
+        Stack<String> stck=new Stack<String>();
+        stck.add(king);
+        while(stck.size()>0)
+        {
+            String s=stck.pop();
+            if(!hset.contains(s))
+            {
+                result.add(s);
+            }
+            if(h.containsKey(s))
+            {
+                ArrayList<String> l=h.get(s);
+                for(int j=l.size()-1;j>=0;j--)
+                {
+                    stck.push(l.get(j));
+                }
+            }
+        }
+
+        return result;
+        
+    }
+}
+---------------------------------------------------------------------------------------------------------------------
+//tricky but 100%
+
+class ThroneInheritance {
+    private Person king;
+    private final Map<String, Person> persons;
+
+    public ThroneInheritance(final String kingName) {
+        this.king = new Person(kingName);
+
+        this.persons = new HashMap<>();
+
+        this.persons.put(kingName, this.king);
+    }
+    
+    public void birth(final String parentName, final String childName) {
+        final Person child = new Person(childName);
+
+        this.persons.get(parentName).children().add(child);
+        this.persons.put(childName, child);
+    }
+    
+    public void death(final String name) {
+        this.persons.get(name).isAlive(false);
+    }
+    
+    public List<String> getInheritanceOrder() {
+        List<String> result = new ArrayList<>();
+
+        this.dfs(this.king, result);
+
+        return result;
+    }
+
+    private void dfs(Person king, List<String> result) {
+        if(king != null) {
+            if(king.isAlive())
+                result.add(king.name());
+
+            for(Person child : king.children())
+                dfs(child, result);
+        }
+    }
+
+    private final class Person {
+        private final String name;
+        private final List<Person> children;
+        private boolean isAlive;
+
+        public Person(final String name) {
+            this.name = name;
+            this.children = new ArrayList<>();
+            this.isAlive = true;
+        }
+
+        public String name() {
+            return this.name;
+        }
+
+        public List<Person> children() {
+            return this.children;
+        }
+
+        public boolean isAlive() {
+            return this.isAlive;
+        }
+
+        public void isAlive(final boolean isAlive) {
+            this.isAlive = isAlive;
+        }
+    }
+}
