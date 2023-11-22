@@ -1,0 +1,73 @@
+
+
+class Solution {
+    int count=0;
+    public int countPairs(TreeNode root, int distance) {
+        Distance(root,distance);
+            return count;
+    }
+    public List<Integer> Distance(TreeNode root,int distance){
+        if(root==null)
+            return new ArrayList<Integer>();
+        if(root.left==null&&root.right==null){
+            List<Integer> sublist=new ArrayList<Integer>();
+            sublist.add(1);
+            return sublist;
+        }
+        List<Integer> l1=Distance(root.left,distance);
+        List<Integer> l2=Distance(root.right,distance);
+        for(int d1:l1){
+            for(int d2:l2){
+                if(d1+d2<=distance)
+                    count++;
+            }
+        }
+        List<Integer> list=new ArrayList<Integer>();
+        for(int val:l1)
+            list.add(val+1);
+        for(int val:l2)
+            list.add(val+1);
+        return list;
+    }
+}
+--------------------------------------------------------------------------------------------------------------
+//difficult n tricky
+
+
+class Solution {
+    int count = 0;
+    public int countPairs(TreeNode root, int distance) {
+        if (distance == 1) {
+            return 0;
+        }
+        helper(root, distance);
+        return count;
+    }
+
+    public int[] helper(TreeNode node, int distance) {
+        int[] res = new int[distance+1];
+        if (node == null) {
+            return res;    
+        }
+        if (node.left == null && node.right == null) {
+            res[1] = 1;
+            return res;
+        }
+
+        int[] left = helper(node.left, distance);
+        int[] right = helper(node.right, distance);
+
+        int rightCount = 0;
+        for (int i = 1; i < distance; i++) {
+            rightCount += right[i];
+            res[i+1] = left[i] + right[i];
+        }
+
+        for (int i = 1; i < distance; i++) {
+            count += left[i] * rightCount;
+            rightCount -= right[distance - i];
+        }
+
+        return res;
+    }
+}
