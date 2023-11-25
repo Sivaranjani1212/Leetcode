@@ -1,0 +1,109 @@
+class Solution {
+    public List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+        
+        List<Integer> list = new ArrayList<>();
+        inOrder(root,list);
+        List<List<Integer>> result = new ArrayList<>(); 
+
+        for(int query : queries) {
+            result.add(findMinMaxTo(list, query));
+        }
+        return result;
+    }
+
+    private void inOrder(TreeNode root, List<Integer> list){
+        if(root==null){
+            return;
+        }
+        inOrder(root.left, list);
+        list.add(root.val);
+        inOrder(root.right, list);
+        return;
+    }
+
+    //Binary serach on List
+    private List<Integer> findMinMaxTo(List<Integer> list, int target) {
+
+        int minIndex = 0;
+        int maxIndex = list.size()-1;
+        while(minIndex <= maxIndex){
+            int midIndex = minIndex +(maxIndex-minIndex)/2;
+            int currentValue = list.get(midIndex);
+            if(currentValue == target) {
+                return List.of(target, target);
+            }
+            
+            int previousValue =  getValue(list, midIndex-1);
+            int nextValue = getValue(list, midIndex+1);
+
+            if(currentValue > target) {
+                if(previousValue < target) {
+                    return List.of(previousValue, currentValue);
+                }
+            } else if(nextValue == -1 || nextValue > target) {
+                return List.of(currentValue, nextValue);
+            }  
+            if(currentValue > target) {
+              
+                maxIndex = midIndex-1;
+            } else {
+              
+                minIndex = midIndex+1;
+            }
+        }
+        return List.of(-1, -1);
+    }
+
+    private int getValue(List<Integer> list, int index) {
+
+        if(index >=0 && index<list.size()) {
+            return list.get(index);
+        }
+        return -1;
+    }
+}
+
+/*
+class Solution {
+    public List<List<Integer>> closestNodes(TreeNode root, List<Integer> queries) {
+        List<List<Integer>> list = new ArrayList<>();
+        int max = -1;
+        int min = -1;
+        TreeSet<Integer> set = new TreeSet<>();
+        inorder(root, set);
+        int idx = 0;
+        for(int q : queries){
+            ArrayList<Integer> base = new ArrayList<>();
+            if(set.contains(q)){
+                min = q;
+                max = q;
+            }
+            else{
+                Integer high = set.higher(q);
+                if(high == null){
+                    max = -1;
+                } else{
+                    max = high;
+                }
+                Integer low = set.lower(q);
+                if(low == null){
+                    min = -1;
+                } else{
+                    min = low;
+                }
+            }
+            base.add(min);
+            base.add(max);
+            list.add(base);
+        }
+        return list;
+    }
+    public void inorder(TreeNode root, TreeSet<Integer> set){
+        if(root == null){
+            return;
+        }
+        inorder(root.left, set);
+        set.add(root.val);
+        inorder(root.right, set);
+    }
+}*/
