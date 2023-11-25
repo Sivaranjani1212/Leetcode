@@ -1,0 +1,95 @@
+//graph dfs
+
+class Solution {
+  private final Set<Integer> reachableSet = new HashSet<>(List.of(0));
+
+    public int reachableNodes(int n, int[][] edges, int[] restricted) {
+        Set<Integer> restrictedNodes = Arrays.stream(restricted).boxed().collect(Collectors.toSet());
+        Map<Integer, List<Integer>> nodes = new HashMap<>();
+
+        for (int[] edge : edges) {
+            nodes.computeIfAbsent(edge[0], value -> new ArrayList<>()).add(edge[1]);
+            nodes.computeIfAbsent(edge[1], value -> new ArrayList<>()).add(edge[0]);
+        }
+
+        dfs(nodes, 0, restrictedNodes, new HashSet<>());
+        return reachableSet.size();
+    }
+
+    private void dfs(Map<Integer, List<Integer>> nodes, int current, Set<Integer> restricted, Set<Integer> seen) {
+        for (int node : nodes.get(current)) {
+            if (!restricted.contains(node) && !seen.contains(node)) {
+                reachableSet.add(node);
+                seen.add(node);
+                dfs(nodes, node, restricted, seen);
+            }
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------------
+class Solution {
+    
+    public HashSet<Integer> seen = new HashSet<>();
+    public Map<Integer, List<Integer>> graph = new HashMap<>();
+    public int count = 0;
+    public int reachableNodes(int n, int[][] edges, int[] restricted) {
+        for(int i = 0; i < restricted.length; i++) seen.add(restricted[i]);
+        for(int i = 0; i < edges.length; i++) {
+            int edgeX = edges[i][0];
+            int edgeY = edges[i][1];
+            graph.computeIfAbsent(edgeX, value -> new ArrayList<Integer>()).add(edgeY);
+            graph.computeIfAbsent(edgeY, value -> new ArrayList<Integer>()).add(edgeX);
+        }
+        dfs(0);
+        return count;
+    }
+    public void dfs(int node) {
+        count++;
+        seen.add(node);
+        for(int neighbor: graph.get(node)) {
+            if(!seen.contains(neighbor)) {
+                dfs(neighbor);
+            }
+        }
+    }
+}
+--------------------------------------------------------------------------------------------------------------------
+//graph bfs
+
+class Solution {
+    public int reachableNodes(int n, int[][] edges, int[] restricted) {
+      
+        // Just to fetch restricted nodes on O(1)
+        HashSet<Integer> restr = new HashSet<>();
+        for(int i:restricted)restr.add(i);
+        // Creating the graph
+        ArrayList<Integer>[] adj = new ArrayList[n];
+    
+        for(int i=0;i<n;i++) adj[i] = new ArrayList<>();
+        for(int[] ed:edges){
+            adj[ed[0]].add(ed[1]);
+            adj[ed[1]].add(ed[0]);
+        }
+        
+        // BFS traversal
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] vis = new boolean[n];
+        // Don't forget to check condition for 0 as well
+        if(!restr.contains(0)){q.add(0);vis[0]=true;}
+
+        int cnt = 0;
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            vis[cur] = true;
+            //This node is reachable from 0 so increment count
+            cnt++;
+            for(int i:adj[cur]){
+                if(!restr.contains(i) && !vis[i]) q.offer(i);
+            }
+        }
+
+        // Finally return all the reachable nodes 
+        return cnt; 
+       
+    }
+}
