@@ -1,0 +1,59 @@
+//bfs
+
+class Solution {
+    class Pair{
+        TreeNode node;
+        TreeNode parent;
+        public Pair(TreeNode n, TreeNode p){
+            node = n;
+            parent = p;
+        }
+    }
+    
+    public TreeNode replaceValueInTree(TreeNode root) {
+        // same depth diff parent
+        Queue<Pair> q = new LinkedList<>();
+        q.add(new Pair(root, null));
+        
+        int curLevelChildSum = 0;
+        Map<TreeNode, Integer> map = new HashMap<>();       // storing parent : childsum   
+        
+        while(!q.isEmpty()){
+           
+            
+            int lastLevelChildSum = curLevelChildSum;    // prevsum = cursum
+            curLevelChildSum = 0;   // reset cursum
+            
+            int size = q.size();
+            
+            while(size-- > 0){
+                Pair front = q.poll();
+                
+                TreeNode node = front.node;
+                TreeNode par = front.parent;
+
+                int childsum = 0; 
+                // left
+                if(node.left != null){
+                    q.add(new Pair(node.left, node));
+                    childsum += node.left.val;
+                }
+                // right
+                if(node.right != null){
+                    q.add(new Pair(node.right, node));
+                    childsum += node.right.val;
+                }
+                
+                // put value in map
+                map.put(node, childsum);
+                
+                curLevelChildSum += childsum;
+                
+                node.val = lastLevelChildSum - map.getOrDefault(par, 0);  // get(par) gives me childsum of this node's parent
+            }
+            
+        }
+        
+        return root;
+    }
+}
